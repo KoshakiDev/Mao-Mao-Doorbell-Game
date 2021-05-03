@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://assets/art/particles/particle1.png" type="Texture" id=1]
+
+[sub_resource type="Curve" id=3]
+min_value = -25.0
+max_value = 25.0
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 1 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="Gradient" id=2]
+offsets = PoolRealArray( 0.302013, 1 )
+colors = PoolColorArray( 0.917647, 0.917647, 0.917647, 1, 1, 1, 1, 0 )
+
+[node name="Particles" type="Node2D"]
+
+[node name="Particles2D" type="CPUParticles2D" parent="."]
+emitting = false
+amount = 1
+lifetime = 5.0
+one_shot = true
+texture = ExtResource( 1 )
+spread = 100.0
+initial_velocity = 100.0
+angle = -20.0
+angle_random = 0.5
+angle_curve = SubResource( 3 )
+color_ramp = SubResource( 2 )

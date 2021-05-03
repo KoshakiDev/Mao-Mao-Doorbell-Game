@@ -1,0 +1,365 @@
+[gd_scene load_steps=16 format=2]
+
+[ext_resource path="res://src/BluePlayer/BluePlayer.tscn" type="PackedScene" id=1]
+[ext_resource path="res://src/userInterface/score/ScoreUI.tscn" type="PackedScene" id=2]
+[ext_resource path="res://src/RedPlayer/RedPlayer.tscn" type="PackedScene" id=3]
+[ext_resource path="res://assets/theme/wheaton capitals.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://src/main/Game.gd" type="Script" id=5]
+[ext_resource path="res://assets/art/Wall.png" type="Texture" id=6]
+[ext_resource path="res://src/userInterface/goalSplash/goal.gd" type="Script" id=8]
+[ext_resource path="res://assets/theme/font.tres" type="DynamicFont" id=9]
+
+[sub_resource type="DynamicFont" id=2]
+font_data = ExtResource( 4 )
+
+[sub_resource type="Shader" id=4]
+code = "shader_type canvas_item;
+render_mode blend_mix;
+
+uniform float angle_degrees;
+uniform float strength : hint_range(0,1, 0.0001);
+
+//	Directional Blur Shader
+
+vec4 dirBlur(sampler2D sampler, vec2 uv, vec2 dir) {
+	// Change the nu,ber of samples for better quality at the cost of performance
+	int samples = 10;
+	vec4 l = vec4(0);
+	float delta = 1.0 / float(samples);
+	for(float i = -1.0; i <= 1.0; i += delta)
+    {
+        l += texture(sampler, uv - vec2(dir.x * i, dir.y * i)).rgba;
+    }
+	return vec4(l*delta*0.5);
+}
+
+
+void fragment(){
+	vec2 blur_vector = vec2(cos(radians(angle_degrees)),sin(radians(angle_degrees)))*strength;
+	COLOR=dirBlur(TEXTURE, UV, blur_vector);
+}"
+
+[sub_resource type="ShaderMaterial" id=6]
+shader = SubResource( 4 )
+shader_param/angle_degrees = 90.0
+shader_param/strength = 0.0
+
+[sub_resource type="Animation" id=8]
+resource_name = "blueWon"
+length = 3.0
+tracks/0/type = "method"
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 3 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "reload"
+} ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("CanvasLayer/ColorRect:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 2, 3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("CanvasLayer/BlueWon:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+
+[sub_resource type="Animation" id=5]
+resource_name = "enter"
+length = 5.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("CanvasLayer/ColorRect:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("CanvasLayer/GoalLabel:rect_position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 1.1, 1.6, 4.6, 5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 195.25, -295 ), Vector2( 195.25, -295 ), Vector2( 195.25, 280 ), Vector2( 195.25, 280 ), Vector2( 195.25, 865 ) ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("CanvasLayer/GoalLabel")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 1.1, 1.5, 4.6, 5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"values": [ {
+"args": [  ],
+"method": "set_motion_blur"
+}, {
+"args": [  ],
+"method": "remove_motion_blur"
+}, {
+"args": [  ],
+"method": "set_motion_blur"
+}, {
+"args": [  ],
+"method": "remove_motion_blur"
+} ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("CanvasLayer/UI/Control:rect_position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, -180 ), Vector2( 0, 0 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("CanvasLayer/RedWon:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("CanvasLayer/BlueWon:visible")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+
+[sub_resource type="Animation" id=7]
+resource_name = "exit"
+length = 0.5
+tracks/0/type = "method"
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0.5 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "sceneMove"
+} ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("CanvasLayer/ColorRect:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=9]
+resource_name = "redWon"
+length = 3.0
+tracks/0/type = "method"
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 3 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "reload"
+} ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("CanvasLayer/ColorRect:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 2, 3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("CanvasLayer/RedWon:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+
+[node name="Game" type="Node2D"]
+script = ExtResource( 5 )
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Background" type="Sprite" parent="CanvasLayer"]
+modulate = Color( 0.862745, 0.862745, 0.862745, 1 )
+position = Vector2( 568.088, 423.924 )
+scale = Vector2( 0.996312, 1 )
+z_index = -10
+texture = ExtResource( 6 )
+
+[node name="Blue Neighbor" parent="CanvasLayer" instance=ExtResource( 1 )]
+position = Vector2( 806.023, 423.924 )
+
+[node name="Red Neighbor" parent="CanvasLayer" instance=ExtResource( 3 )]
+position = Vector2( 342.178, 423.924 )
+
+[node name="UI" parent="CanvasLayer" instance=ExtResource( 2 )]
+
+[node name="Control" parent="CanvasLayer/UI" index="0"]
+margin_top = -180.0
+margin_bottom = -140.0
+
+[node name="Press D" type="Label" parent="CanvasLayer"]
+margin_left = 25.0
+margin_top = 280.0
+margin_right = 77.0
+margin_bottom = 323.0
+rect_scale = Vector2( 2, 2 )
+custom_fonts/font = SubResource( 2 )
+text = "Press
+D!"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Press K" type="Label" parent="CanvasLayer"]
+margin_left = 1020.0
+margin_top = 280.0
+margin_right = 1072.0
+margin_bottom = 323.0
+rect_scale = Vector2( 2, 2 )
+custom_fonts/font = SubResource( 2 )
+text = "Press
+k!"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GoalLabel" type="Label" parent="CanvasLayer"]
+material = SubResource( 6 )
+margin_left = 195.25
+margin_top = -295.0
+margin_right = 954.25
+margin_bottom = 3.00012
+custom_fonts/font = ExtResource( 9 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "reach 100!"
+align = 1
+valign = 1
+script = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BlueWon" type="Label" parent="CanvasLayer"]
+visible = false
+material = SubResource( 6 )
+margin_left = 195.25
+margin_top = 280.0
+margin_right = 954.25
+margin_bottom = 578.0
+custom_fonts/font = ExtResource( 9 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "BLUE WON!"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RedWon" type="Label" parent="CanvasLayer"]
+visible = false
+material = SubResource( 6 )
+margin_left = 195.25
+margin_top = 280.0
+margin_right = 954.25
+margin_bottom = 578.0
+custom_fonts/font = ExtResource( 9 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "RED WON!"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+modulate = Color( 1, 1, 1, 0 )
+margin_right = 1132.0
+margin_bottom = 849.0
+mouse_filter = 2
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Animator" type="AnimationPlayer" parent="."]
+anims/blueWon = SubResource( 8 )
+anims/enter = SubResource( 5 )
+anims/exit = SubResource( 7 )
+anims/redWon = SubResource( 9 )
+
+[editable path="CanvasLayer/UI"]

@@ -1,0 +1,95 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://src/userInterface/logoShow/LogoShow.gd" type="Script" id=1]
+[ext_resource path="res://assets/logos/cn.png" type="Texture" id=2]
+[ext_resource path="res://assets/theme/font.tres" type="DynamicFont" id=3]
+
+[sub_resource type="Animation" id=1]
+resource_name = "play"
+length = 9.0
+step = 1.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("CN:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 1, 2, 3, 4 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Zhangir/Label2:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 5, 6, 7, 8 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 8 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "sceneMove"
+} ]
+}
+
+[node name="LogoShow" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/play = SubResource( 1 )
+
+[node name="CN" type="Node2D" parent="."]
+modulate = Color( 1, 1, 1, 0 )
+
+[node name="cn" type="Sprite" parent="CN"]
+position = Vector2( 563.186, 476.963 )
+texture = ExtResource( 2 )
+
+[node name="Label" type="Label" parent="CN"]
+anchor_right = 1.0
+margin_top = 116.0
+margin_right = 1132.0
+margin_bottom = 194.0
+custom_fonts/font = ExtResource( 3 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "this game was not made by"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Zhangir" type="Node2D" parent="."]
+
+[node name="Label2" type="Label" parent="Zhangir"]
+modulate = Color( 1, 1, 1, 0 )
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_top = 382.93
+margin_right = 1132.0
+margin_bottom = 460.93
+rect_pivot_offset = Vector2( 574.06, 38.1551 )
+custom_fonts/font = ExtResource( 3 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "xanthos ware presents"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
